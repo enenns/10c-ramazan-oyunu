@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10C Ramazan Oyunu</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+
+body{
+height:100vh;
+background:radial-gradient(circle at top,#1e3c72,#0f2027);
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+}
+
+/* YILDIZ EFEKT */
+body::before{
+content:"";
+position:absolute;
+width:200%;
+height:200%;
+background:transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+animation:moveStars 60s linear infinite;
+opacity:0.4;
+}
+
+@keyframes moveStars{
+from{transform:translateY(0)}
+to{transform:translateY(-1000px)}
+}
+
+.card{
+background:rgba(0,0,0,0.65);
+backdrop-filter:blur(15px);
+padding:40px;
+border-radius:25px;
+width:90%;
+max-width:600px;
+text-align:center;
+box-shadow:0 0 50px rgba(255,215,0,0.5);
+z-index:2;
+animation:fadeIn 0.6s ease;
+}
+
+h1{
+color:gold;
+margin-bottom:15px;
+}
+
+input{
+width:80%;
+padding:12px;
+margin:10px;
+border:none;
+border-radius:10px;
+font-size:16px;
+}
+
+button{
+padding:12px 25px;
+margin:10px;
+border:none;
+border-radius:12px;
+font-size:16px;
+cursor:pointer;
+background:gold;
+color:black;
+font-weight:600;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.08);
+background:orange;
+}
+
+.answers button{
+display:block;
+width:100%;
+margin:8px 0;
+}
+
+.hidden{display:none;}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(20px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+.reward{
+font-size:22px;
+color:#00ffcc;
+margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="loginCard">
+<h1>🌙 10C RAMAZAN OYUNU 🌙</h1>
+<p>Bilgini test et, şekeri kap 🍬</p>
+<input type="text" id="name" placeholder="İsmin">
+<input type="text" id="class" placeholder="Sınıfın">
+<br>
+<button onclick="startGame()">Başla</button>
+</div>
+
+<div class="card hidden" id="quizCard">
+<h1 id="questionText"></h1>
+<div class="answers" id="answers"></div>
+</div>
+
+<div class="card hidden" id="resultCard">
+<h1>🎉 Tebrikler 🎉</h1>
+<p class="reward">Bir şeker alma hakkı kazandın! 🍬</p>
+<p>Aşağıdaki şeker bölümünden şeker alabilirsin 😎</p>
+</div>
+
+<audio id="clickSound">
+<source src="https://www.soundjay.com/buttons/sounds/button-09.mp3">
+</audio>
+
+<script>
+const questions=[
+{
+question:"Ramazan ayında sakız çiğnemek orucu bozar mı?",
+answers:[
+{text:"Evet",correct:true},
+{text:"Hayır",correct:false}
+]
+},
+{
+question:"Ramazan hangi takvime göre belirlenir?",
+answers:[
+{text:"Miladi Takvim",correct:false},
+{text:"Hicri Takvim",correct:true}
+]
+},
+{
+question:"Sahur ne zaman yapılır?",
+answers:[
+{text:"İmsaktan önce",correct:true},
+{text:"İftardan sonra",correct:false}
+]
+},
+{
+question:"Kadir Gecesi hangi ay içindedir?",
+answers:[
+{text:"Ramazan",correct:true},
+{text:"Şaban",correct:false}
+]
+},
+{
+question:"Ramazan Bayramı kaç gündür?",
+answers:[
+{text:"3 gün",correct:true},
+{text:"5 gün",correct:false}
+]
+}
+];
+
+let currentQuestion=0;
+
+function startGame(){
+const name=document.getElementById("name").value;
+const className=document.getElementById("class").value;
+
+if(name===""||className===""){
+alert("Lütfen isim ve sınıf gir!");
+return;
+}
+
+document.getElementById("loginCard").classList.add("hidden");
+document.getElementById("quizCard").classList.remove("hidden");
+showQuestion();
+}
+
+function showQuestion(){
+const q=questions[currentQuestion];
+document.getElementById("questionText").innerText=q.question;
+const answersDiv=document.getElementById("answers");
+answersDiv.innerHTML="";
+
+q.answers.forEach(answer=>{
+const btn=document.createElement("button");
+btn.innerText=answer.text;
+btn.onclick=()=>checkAnswer(answer.correct);
+answersDiv.appendChild(btn);
+});
+}
+
+function checkAnswer(correct){
+if(correct){
+document.getElementById("clickSound").play();
+
+confetti({
+particleCount:250,
+spread:140,
+origin:{y:0.6}
+});
+
+currentQuestion++;
+
+if(currentQuestion<questions.length){
+setTimeout(showQuestion,1200);
+}else{
+setTimeout(()=>{
+document.getElementById("quizCard").classList.add("hidden");
+document.getElementById("resultCard").classList.remove("hidden");
+},1500);
+}
+}else{
+alert("Yanlış cevap 😅 Tekrar dene!");
+}
+}
+</script>
+
+</body>
+</html>
