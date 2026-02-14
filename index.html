@@ -3,260 +3,222 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>10C Ramazan Oyunu</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<title>10C Ramazan Bilgi Oyunu</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-
 body{
-height:100vh;
-background:radial-gradient(circle at top,#1e3c72,#0f2027);
+margin:0;
+font-family:Arial, sans-serif;
+background:linear-gradient(to bottom,#0f2027,#203a43,#2c5364);
 color:white;
 display:flex;
 justify-content:center;
 align-items:center;
-overflow:hidden;
+height:100vh;
+text-align:center;
 }
 
-/* YILDIZ EFEKT */
-body::before{
-content:"";
-position:absolute;
-width:200%;
-height:200%;
-background:transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-animation:moveStars 60s linear infinite;
-opacity:0.4;
-}
-
-@keyframes moveStars{
-from{transform:translateY(0)}
-to{transform:translateY(-1000px)}
-}
-
-.card{
-background:rgba(0,0,0,0.65);
-backdrop-filter:blur(15px);
-padding:40px;
-border-radius:25px;
+.container{
+background:rgba(0,0,0,0.6);
+padding:30px;
+border-radius:20px;
 width:90%;
 max-width:600px;
-text-align:center;
-box-shadow:0 0 50px rgba(255,215,0,0.5);
-z-index:2;
-animation:fadeIn 0.6s ease;
+box-shadow:0 0 30px rgba(255,255,255,0.2);
 }
 
-h1{
-color:gold;
-margin-bottom:15px;
-}
-
-input{
-width:80%;
-padding:12px;
-margin:10px;
-border:none;
-border-radius:10px;
-font-size:16px;
-}
+h1{color:gold;}
 
 button{
-padding:12px 25px;
-margin:10px;
-border:none;
-border-radius:12px;
-font-size:16px;
-cursor:pointer;
-background:gold;
-color:black;
-font-weight:600;
-transition:0.3s;
-}
-
-button:hover{
-transform:scale(1.08);
-background:orange;
-}
-
-.answers button{
-display:block;
-width:100%;
+padding:10px;
 margin:8px 0;
+border:none;
+border-radius:10px;
+cursor:pointer;
+width:100%;
+font-size:15px;
 }
 
-.hidden{display:none;}
+.option{background:#1e90ff;color:white;}
+.option:hover{background:#00bfff;}
 
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(20px)}
-to{opacity:1;transform:translateY(0)}
+.correct{background:green !important;}
+.wrong{background:red !important;}
+
+input{
+padding:10px;
+margin:5px;
+border-radius:8px;
+border:none;
 }
 
-.reward{
-font-size:22px;
-color:#00ffcc;
-margin-top:20px;
+.confetti{
+position:fixed;
+width:8px;
+height:8px;
+top:-10px;
+animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+to{
+transform:translateY(100vh) rotate(720deg);
+opacity:0;
+}
 }
 </style>
 </head>
-
 <body>
 
-<div class="card" id="loginCard">
-<h1>🌙 10C RAMAZAN OYUNU 🌙</h1>
-<p>Bilgini test et, şekeri kap 🍬</p>
-<input type="text" id="name" placeholder="İsmin">
-<input type="text" id="class" placeholder="Sınıfın">
+<div class="container" id="app">
+<h1>🌙 10C Ramazan Oyunu 🌙</h1>
+<input type="text" id="name" placeholder="Adın">
 <br>
 <button onclick="startGame()">Başla</button>
 </div>
 
-<div class="card hidden" id="quizCard">
-<h1 id="questionText"></h1>
-<div class="answers" id="answers"></div>
-</div>
-
-<div class="card hidden" id="resultCard">
-<h1>🎉 Tebrikler 🎉</h1>
-<p class="reward">Bir şeker alma hakkı kazandın! 🍬</p>
-<p>Aşağıdaki şeker bölümünden şeker alabilirsin 😎</p>
-</div>
-
-<audio id="clickSound">
-<source src="https://www.soundjay.com/buttons/sounds/button-09.mp3">
-</audio>
-
 <script>
-// Soruları karıştırma fonksiyonu
-function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
+
+function shuffle(array){
+for(let i=array.length-1;i>0;i--){
+const j=Math.floor(Math.random()*(i+1));
+[array[i],array[j]]=[array[j],array[i]];
+}
+return array;
 }
 
 const questionPool = [
-{question:"Ramazan ayında oruç hangi vakitte başlar?",options:["Güneş doğarken","İmsak vakti","Öğle ezanı","Akşam ezanı"],correct:1},
-{question:"İftar hangi vakitte açılır?",options:["Öğle","Akşam ezanı","Yatsı","İkindi"],correct:1},
-{question:"Ramazan ayı hangi takvime göre belirlenir?",options:["Miladi","Hicri","Rumi","Gregoryen"],correct:1},
-{question:"Teravih namazı Türkiye'de genelde kaç rekattır?",options:["8","12","20","40"],correct:2},
-{question:"Kadir Gecesi hangi ay içindedir?",options:["Recep","Şaban","Ramazan","Muharrem"],correct:2},
+
+{question:"Ramazan ayı Hicri takvime göre kaçıncı aydır?",options:["7","8","9","10"],correct:2},
+{question:"Oruç hangi vakitte başlar?",options:["İmsak","Güneş doğuşu","Öğle","İkindi"],correct:0},
+{question:"Oruç hangi vakitte açılır?",options:["İkindi","Akşam ezanı","Yatsı","Sabah"],correct:1},
 {question:"Ramazan Bayramı kaç gün sürer?",options:["1","2","3","4"],correct:2},
-{question:"Oruç tutmak hangi ibadet türüdür?",options:["Mali","Bedeni","Hem mali hem bedeni","Farz değil"],correct:1},
-{question:"Ramazan ayında verilen sadakaya ne denir?",options:["Fitre","Zekat","Adak","Nafile"],correct:0},
-{question:"Sahur ne zaman yapılır?",options:["İmsaktan önce","Öğlen","Akşam","Yatsı"],correct:0},
-{question:"Oruç kimlere farzdır?",options:["Çocuklara","Akıl sağlığı yerinde ergen Müslümanlara","Turistlere","Herkese"],correct:1},
+{question:"Teravih namazı hangi vakitte kılınır?",options:["Sabah","Öğle","Akşam","Yatsı"],correct:3},
+{question:"Kadir Gecesi hangi ay içindedir?",options:["Recep","Şaban","Ramazan","Muharrem"],correct:2},
+{question:"Oruç İslam’ın kaç şartından biridir?",options:["3","4","5","6"],correct:2},
+{question:"Fitre ne zaman verilir?",options:["Ramazan içinde","Yıl sonunda","Kurban Bayramı","Hac zamanı"],correct:0},
+{question:"Sahur yapmak nedir?",options:["İftardan sonra yemek","İmsaktan önce yemek","Bayram yemeği","Gece namazı"],correct:1},
+{question:"Ramazan ayında indirilmeye başlanan kutsal kitap hangisidir?",options:["Tevrat","Zebur","Kur'an","İncil"],correct:2},
 
-{question:"Ramazan Kur’an ayı olarak da bilinir mi?",options:["Evet","Hayır"],correct:0},
-{question:"Oruçta bilerek su içmek orucu bozar mı?",options:["Evet","Hayır"],correct:0},
+{question:"Oruç tutmak kimlere farzdır?",options:["Çocuklara","Akıl sağlığı yerinde ergen Müslümanlara","Herkese","Turistlere"],correct:1},
 {question:"Unutarak yemek orucu bozar mı?",options:["Evet","Hayır"],correct:1},
-{question:"Ramazan ayı kaç gündür?",options:["29 veya 30","31","28","32"],correct:0},
-{question:"Ramazan'da davul çalınmasının amacı nedir?",options:["Eğlence","Sahura kaldırmak","İftar duyurusu","Bayram kutlamak"],correct:1},
-
-{question:"İlk oruç hangi yılda farz kılınmıştır?",options:["Hicretin 2. yılı","1. yıl","5. yıl","10. yıl"],correct:0},
-{question:"Fitre ne zaman verilir?",options:["Ramazan içinde","Sadece bayram günü","Yıl sonunda","Hiçbir zaman"],correct:0},
-{question:"Ramazan Bayramı diğer adı nedir?",options:["Şeker Bayramı","Kurban Bayramı","Zafer Bayramı","Hicret Bayramı"],correct:0},
-{question:"Teravih namazı hangi vakitte kılınır?",options:["Sabah","Öğle","Akşam","Yatsıdan sonra"],correct:3},
-{question:"Oruçta niyet ne zaman edilir?",options:["İmsaktan önce","Öğlen","Akşam","Yatsı"],correct:0},
-
-{question:"Ramazan ayı her yıl kaç gün geri gelir?",options:["10-11 gün","1 gün","30 gün","Hiç değişmez"],correct:0},
-{question:"Ramazan ayında mukabele ne demektir?",options:["Toplu Kur'an okumak","Toplu yemek","Bayramlaşmak","Dua etmek"],correct:0},
+{question:"Bilerek su içmek orucu bozar mı?",options:["Evet","Hayır"],correct:0},
+{question:"Ramazan ayında mukabele nedir?",options:["Toplu Kur'an okuma","Toplu iftar","Bayramlaşma","Yardım kampanyası"],correct:0},
 {question:"Oruç sabrı öğretir mi?",options:["Evet","Hayır"],correct:0},
-{question:"Oruç tutan kişiye ne denir?",options:["Mümin","Oruçlu","Müezzin","Hafız"],correct:1},
-{question:"Ramazan ayında yapılan gece ibadetine ne denir?",options:["Teheccüd","Teravih","Vitir","Cuma"],correct:1},
 
-{question:"Kadir Gecesi hangi gecede aranır?",options:["Son 10 gece","İlk gece","Orta gece","Hiçbirinde"],correct:0},
-{question:"Oruç hangi ayda tutulur?",options:["Recep","Şaban","Ramazan","Zilhicce"],correct:2},
-{question:"Oruç tutarken diş fırçalamak sakıncalı mı?",options:["Hayır dikkatli olunursa","Evet tamamen yasak","Sadece gece","Sadece sabah"],correct:0},
-{question:"Ramazan ayında zekat verilebilir mi?",options:["Evet","Hayır"],correct:0},
-{question:"Oruç hangi ezanla biter?",options:["Sabah","Öğle","Akşam","Yatsı"],correct:2},
+{question:"Ramazan ayında verilen sadakaya ne denir?",options:["Zekat","Fitre","Adak","Nafile"],correct:1},
+{question:"Teravih namazı Türkiye'de genellikle kaç rekattır?",options:["8","12","20","40"],correct:2},
+{question:"Ramazan Bayramı'nın diğer adı nedir?",options:["Şeker Bayramı","Zafer Bayramı","Hicret Bayramı","Fetih Bayramı"],correct:0},
+{question:"Oruç hangi ay boyunca tutulur?",options:["Recep","Şaban","Ramazan","Zilhicce"],correct:2},
+{question:"Oruçlu kişi kötü söz söylemeli midir?",options:["Evet","Hayır"],correct:1},
 
-{question:"Ramazan sabır ayı mıdır?",options:["Evet","Hayır"],correct:0},
-{question:"Sahur yapmak sünnet midir?",options:["Evet","Hayır"],correct:0},
-{question:"Oruçta kötü söz söylemek doğru mudur?",options:["Evet","Hayır"],correct:1},
-{question:"Ramazan ayı bereket ayı mıdır?",options:["Evet","Hayır"],correct:0},
-{question:"İftar duası yapılır mı?",options:["Evet","Hayır"],correct:0},
-
+{question:"Kadir Gecesi yaklaşık olarak kaçıncı gecelerde aranır?",options:["İlk 5 gece","Orta 5 gece","Son 10 gece","Sadece 1 gece"],correct:2},
+{question:"Oruçta niyet ne zaman edilir?",options:["İmsaktan önce","Öğle","Akşam","Yatsı"],correct:0},
+{question:"Ramazan ayı her yıl kaç gün geri gelir?",options:["1","5","10-11","30"],correct:2},
+{question:"Zekat hangi ibadet türüdür?",options:["Beden","Mali","Sözlü","Gönüllü"],correct:1},
 {question:"Ramazan ayında yardımlaşma artar mı?",options:["Evet","Hayır"],correct:0},
-{question:"Oruçlu kişi sabırlı olmalı mı?",options:["Evet","Hayır"],correct:0},
-{question:"Bayram namazı Ramazan sonunda mı kılınır?",options:["Evet","Hayır"],correct:0},
-{question:"Ramazan'da camiler daha kalabalık olur mu?",options:["Evet","Hayır"],correct:0},
-{question:"Oruç sadece yemekten mi uzak durmaktır?",options:["Hayır","Evet"],correct:0},
 
-{question:"Ramazan ayında Kur'an indirilmeye başlanmıştır.",options:["Doğru","Yanlış"],correct:0},
-{question:"Oruç sağlıklı bireyler için farzdır.",options:["Doğru","Yanlış"],correct:0},
-{question:"Oruç sabah güneş doğunca başlar.",options:["Doğru","Yanlış"],correct:1},
-{question:"Ramazan ayında fitre verilir.",options:["Doğru","Yanlış"],correct:0},
-{question:"Kadir Gecesi bin aydan hayırlıdır.",options:["Doğru","Yanlış"],correct:0},
+{question:"İftar duası yapılır mı?",options:["Evet","Hayır"],correct:0},
+{question:"Sahur yapmak sünnet midir?",options:["Evet","Hayır"],correct:0},
+{question:"Ramazan ayında camiler daha kalabalık olur mu?",options:["Evet","Hayır"],correct:0},
+{question:"Oruç sabah güneş doğunca başlar mı?",options:["Evet","Hayır"],correct:1},
+{question:"Kadir Gecesi bin aydan hayırlı mıdır?",options:["Evet","Hayır"],correct:0},
 
-{question:"Ramazan ayı 12 ayın kaçıncısıdır?",options:["8","9","10","11"],correct:1},
 {question:"Ramazan sonunda hangi bayram gelir?",options:["Kurban","Ramazan Bayramı","Zafer","Cumhuriyet"],correct:1},
-{question:"Oruç tutmak İslam'ın kaç şartından biridir?",options:["3","4","5","6"],correct:2},
-{question:"Ramazan ayında şeytanlar bağlanır mı?",options:["Evet","Hayır"],correct:0},
-{question:"Oruçluyken kavga etmek doğru mudur?",options:["Hayır","Evet"],correct:0}
+{question:"Oruç tutarken kavga etmek doğru mudur?",options:["Evet","Hayır"],correct:1},
+{question:"Ramazan ayında şeytanlar bağlanır mı (rivayete göre)?",options:["Evet","Hayır"],correct:0},
+{question:"Fitre kimlere verilir?",options:["Zenginlere","İhtiyaç sahiplerine","Turistlere","Çocuklara"],correct:1},
+{question:"Oruç sadece yemekten mi uzak durmaktır?",options:["Evet","Hayır"],correct:1},
+
+{question:"Teravih namazı farz mıdır?",options:["Evet","Hayır"],correct:1},
+{question:"Ramazan ayında yapılan gece ibadetlerinden biri nedir?",options:["Teheccüd","Teravih","Cuma","Bayram"],correct:1},
+{question:"Oruçluyken bilerek kusmak orucu bozar mı?",options:["Evet","Hayır"],correct:0},
+{question:"Oruçluyken diş fırçalamak dikkatli yapılırsa orucu bozar mı?",options:["Evet","Hayır"],correct:1},
+{question:"Ramazan ayında Kur'an hatmi yapılır mı?",options:["Evet","Hayır"],correct:0},
+
+{question:"Ramazan ayında sabır önemli midir?",options:["Evet","Hayır"],correct:0},
+{question:"Bayram namazı sabah kılınır mı?",options:["Evet","Hayır"],correct:0},
+{question:"Oruç akşam ezanıyla biter mi?",options:["Evet","Hayır"],correct:0},
+{question:"Ramazan ayı bereket ayı mıdır?",options:["Evet","Hayır"],correct:0},
+{question:"Oruç tutamayanlar fidye verebilir mi?",options:["Evet","Hayır"],correct:0},
+
+{question:"Ramazan ayında infak artar mı?",options:["Evet","Hayır"],correct:0},
+{question:"Oruç sabah namazından sonra mı başlar?",options:["Evet","Hayır"],correct:1},
+{question:"Sahur vakti imsakla biter mi?",options:["Evet","Hayır"],correct:0},
+{question:"Oruçluyken bilerek sigara içmek orucu bozar mı?",options:["Evet","Hayır"],correct:0},
+{question:"Ramazan ayında sabah ezanı imsak vaktini gösterir mi?",options:["Evet","Hayır"],correct:0},
+
+{question:"Ramazan ayında yapılan yardımlara sevap verilir mi?",options:["Evet","Hayır"],correct:0},
+{question:"Teravih namazı cemaatle kılınabilir mi?",options:["Evet","Hayır"],correct:0},
+{question:"Ramazan ayında Kur'an okumak sevap mıdır?",options:["Evet","Hayır"],correct:0},
+{question:"Oruç sabrı ve iradeyi güçlendirir mi?",options:["Evet","Hayır"],correct:0},
+{question:"Ramazan ayında iftar vermek sevap mıdır?",options:["Evet","Hayır"],correct:0}
+
 ];
 
-// Rastgele 10 soru seç
-const questions = shuffle(questionPool).slice(0, 10);
 
-
+let questions=[];
+let current=0;
+let score=0;
 
 function startGame(){
-const name=document.getElementById("name").value;
-const className=document.getElementById("class").value;
-
-if(name===""||className===""){
-alert("Lütfen isim ve sınıf gir!");
-return;
-}
-
-document.getElementById("loginCard").classList.add("hidden");
-document.getElementById("quizCard").classList.remove("hidden");
+questions=shuffle(questionPool).slice(0,10);
+current=0;
+score=0;
 showQuestion();
 }
 
 function showQuestion(){
-const q=questions[currentQuestion];
-document.getElementById("questionText").innerText=q.question;
-const answersDiv=document.getElementById("answers");
-answersDiv.innerHTML="";
-
-q.answers.forEach(answer=>{
-const btn=document.createElement("button");
-btn.innerText=answer.text;
-btn.onclick=()=>checkAnswer(answer.correct);
-answersDiv.appendChild(btn);
-});
+if(current>=questions.length){
+document.getElementById("app").innerHTML=
+"<h2>🎉 Oyun Bitti 🎉</h2>"+
+"<p>Skor: "+score+" / 10</p>"+
+"<p>Tebrikler! 🍬</p>";
+return;
 }
 
-function checkAnswer(correct){
-if(correct){
-document.getElementById("clickSound").play();
+const q=questions[current];
+let html="<h2>"+q.question+"</h2>";
 
-confetti({
-particleCount:250,
-spread:140,
-origin:{y:0.6}
+q.options.forEach((opt,index)=>{
+html+=`<button class="option" onclick="checkAnswer(${index})">${opt}</button>`;
 });
 
-currentQuestion++;
+document.getElementById("app").innerHTML=html;
+}
 
-if(currentQuestion<questions.length){
-setTimeout(showQuestion,1200);
+function checkAnswer(selected){
+const correct=questions[current].correct;
+const buttons=document.querySelectorAll(".option");
+
+if(selected===correct){
+buttons[selected].classList.add("correct");
+score++;
+launchConfetti();
 }else{
+buttons[selected].classList.add("wrong");
+buttons[correct].classList.add("correct");
+}
+
 setTimeout(()=>{
-document.getElementById("quizCard").classList.add("hidden");
-document.getElementById("resultCard").classList.remove("hidden");
-},1500);
+current++;
+showQuestion();
+},1000);
 }
-}else{
-alert("Yanlış cevap 😅 Tekrar dene!");
+
+function launchConfetti(){
+for(let i=0;i<30;i++){
+let conf=document.createElement("div");
+conf.className="confetti";
+conf.style.left=Math.random()*100+"vw";
+conf.style.background="hsl("+Math.random()*360+",100%,50%)";
+document.body.appendChild(conf);
+setTimeout(()=>conf.remove(),3000);
 }
 }
+
 </script>
 
 </body>
 </html>
+
