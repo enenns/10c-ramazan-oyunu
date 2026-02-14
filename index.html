@@ -129,60 +129,6 @@ margin-top:20px;
 </audio>
 
 <script>
-// 100 SORULUK HAVUZ
-const questionPool = [
-    {
-        question: "Ramazan ayında oruç hangi vakitte başlar?",
-        options: ["Güneş doğarken", "İmsak vakti", "Öğle ezanı", "Akşam ezanı"],
-        correct: 1
-    },
-    {
-        question: "Ramazan ayında sakız çiğnemek orucu bozar mı?",
-        options: ["Evet", "Hayır"],
-        correct: 0
-    },
-    {
-        question: "Ramazan ayı hangi takvime göre belirlenir?",
-        options: ["Miladi", "Hicri", "Rumi", "Gregoryen"],
-        correct: 1
-    },
-    {
-        question: "Teravih namazı kaç rekattır (Türkiye'de yaygın)?",
-        options: ["8", "10", "20", "32"],
-        correct: 2
-    },
-    {
-        question: "Kadir Gecesi hangi ayda yer alır?",
-        options: ["Şaban", "Recep", "Ramazan", "Muharrem"],
-        correct: 2
-    },
-    {
-        question: "Ramazan Bayramı kaç gün sürer?",
-        options: ["1", "2", "3", "4"],
-        correct: 2
-    },
-    {
-        question: "Oruç hangi ibadet türüne girer?",
-        options: ["Mali", "Bedeni", "Hem mali hem bedeni", "Zorunlu değil"],
-        correct: 1
-    },
-    {
-        question: "Ramazan ayında verilen sadakaya ne denir?",
-        options: ["Fitre", "Zekat", "Sadaka-i cariye", "Adak"],
-        correct: 0
-    },
-    {
-        question: "İftar hangi vakitte açılır?",
-        options: ["Güneş doğarken", "Öğle", "Akşam ezanı", "Yatsı"],
-        correct: 2
-    },
-    {
-        question: "Sahur ne zaman yapılır?",
-        options: ["Gece yarısı", "İmsaktan önce", "Öğlen", "Akşam"],
-        correct: 1
-    }
-];
-
 // Soruları karıştırma fonksiyonu
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -192,8 +138,70 @@ function shuffle(array) {
     return array;
 }
 
+const questionPool = [
+{question:"Ramazan ayında oruç hangi vakitte başlar?",options:["Güneş doğarken","İmsak vakti","Öğle ezanı","Akşam ezanı"],correct:1},
+{question:"İftar hangi vakitte açılır?",options:["Öğle","Akşam ezanı","Yatsı","İkindi"],correct:1},
+{question:"Ramazan ayı hangi takvime göre belirlenir?",options:["Miladi","Hicri","Rumi","Gregoryen"],correct:1},
+{question:"Teravih namazı Türkiye'de genelde kaç rekattır?",options:["8","12","20","40"],correct:2},
+{question:"Kadir Gecesi hangi ay içindedir?",options:["Recep","Şaban","Ramazan","Muharrem"],correct:2},
+{question:"Ramazan Bayramı kaç gün sürer?",options:["1","2","3","4"],correct:2},
+{question:"Oruç tutmak hangi ibadet türüdür?",options:["Mali","Bedeni","Hem mali hem bedeni","Farz değil"],correct:1},
+{question:"Ramazan ayında verilen sadakaya ne denir?",options:["Fitre","Zekat","Adak","Nafile"],correct:0},
+{question:"Sahur ne zaman yapılır?",options:["İmsaktan önce","Öğlen","Akşam","Yatsı"],correct:0},
+{question:"Oruç kimlere farzdır?",options:["Çocuklara","Akıl sağlığı yerinde ergen Müslümanlara","Turistlere","Herkese"],correct:1},
+
+{question:"Ramazan Kur’an ayı olarak da bilinir mi?",options:["Evet","Hayır"],correct:0},
+{question:"Oruçta bilerek su içmek orucu bozar mı?",options:["Evet","Hayır"],correct:0},
+{question:"Unutarak yemek orucu bozar mı?",options:["Evet","Hayır"],correct:1},
+{question:"Ramazan ayı kaç gündür?",options:["29 veya 30","31","28","32"],correct:0},
+{question:"Ramazan'da davul çalınmasının amacı nedir?",options:["Eğlence","Sahura kaldırmak","İftar duyurusu","Bayram kutlamak"],correct:1},
+
+{question:"İlk oruç hangi yılda farz kılınmıştır?",options:["Hicretin 2. yılı","1. yıl","5. yıl","10. yıl"],correct:0},
+{question:"Fitre ne zaman verilir?",options:["Ramazan içinde","Sadece bayram günü","Yıl sonunda","Hiçbir zaman"],correct:0},
+{question:"Ramazan Bayramı diğer adı nedir?",options:["Şeker Bayramı","Kurban Bayramı","Zafer Bayramı","Hicret Bayramı"],correct:0},
+{question:"Teravih namazı hangi vakitte kılınır?",options:["Sabah","Öğle","Akşam","Yatsıdan sonra"],correct:3},
+{question:"Oruçta niyet ne zaman edilir?",options:["İmsaktan önce","Öğlen","Akşam","Yatsı"],correct:0},
+
+{question:"Ramazan ayı her yıl kaç gün geri gelir?",options:["10-11 gün","1 gün","30 gün","Hiç değişmez"],correct:0},
+{question:"Ramazan ayında mukabele ne demektir?",options:["Toplu Kur'an okumak","Toplu yemek","Bayramlaşmak","Dua etmek"],correct:0},
+{question:"Oruç sabrı öğretir mi?",options:["Evet","Hayır"],correct:0},
+{question:"Oruç tutan kişiye ne denir?",options:["Mümin","Oruçlu","Müezzin","Hafız"],correct:1},
+{question:"Ramazan ayında yapılan gece ibadetine ne denir?",options:["Teheccüd","Teravih","Vitir","Cuma"],correct:1},
+
+{question:"Kadir Gecesi hangi gecede aranır?",options:["Son 10 gece","İlk gece","Orta gece","Hiçbirinde"],correct:0},
+{question:"Oruç hangi ayda tutulur?",options:["Recep","Şaban","Ramazan","Zilhicce"],correct:2},
+{question:"Oruç tutarken diş fırçalamak sakıncalı mı?",options:["Hayır dikkatli olunursa","Evet tamamen yasak","Sadece gece","Sadece sabah"],correct:0},
+{question:"Ramazan ayında zekat verilebilir mi?",options:["Evet","Hayır"],correct:0},
+{question:"Oruç hangi ezanla biter?",options:["Sabah","Öğle","Akşam","Yatsı"],correct:2},
+
+{question:"Ramazan sabır ayı mıdır?",options:["Evet","Hayır"],correct:0},
+{question:"Sahur yapmak sünnet midir?",options:["Evet","Hayır"],correct:0},
+{question:"Oruçta kötü söz söylemek doğru mudur?",options:["Evet","Hayır"],correct:1},
+{question:"Ramazan ayı bereket ayı mıdır?",options:["Evet","Hayır"],correct:0},
+{question:"İftar duası yapılır mı?",options:["Evet","Hayır"],correct:0},
+
+{question:"Ramazan ayında yardımlaşma artar mı?",options:["Evet","Hayır"],correct:0},
+{question:"Oruçlu kişi sabırlı olmalı mı?",options:["Evet","Hayır"],correct:0},
+{question:"Bayram namazı Ramazan sonunda mı kılınır?",options:["Evet","Hayır"],correct:0},
+{question:"Ramazan'da camiler daha kalabalık olur mu?",options:["Evet","Hayır"],correct:0},
+{question:"Oruç sadece yemekten mi uzak durmaktır?",options:["Hayır","Evet"],correct:0},
+
+{question:"Ramazan ayında Kur'an indirilmeye başlanmıştır.",options:["Doğru","Yanlış"],correct:0},
+{question:"Oruç sağlıklı bireyler için farzdır.",options:["Doğru","Yanlış"],correct:0},
+{question:"Oruç sabah güneş doğunca başlar.",options:["Doğru","Yanlış"],correct:1},
+{question:"Ramazan ayında fitre verilir.",options:["Doğru","Yanlış"],correct:0},
+{question:"Kadir Gecesi bin aydan hayırlıdır.",options:["Doğru","Yanlış"],correct:0},
+
+{question:"Ramazan ayı 12 ayın kaçıncısıdır?",options:["8","9","10","11"],correct:1},
+{question:"Ramazan sonunda hangi bayram gelir?",options:["Kurban","Ramazan Bayramı","Zafer","Cumhuriyet"],correct:1},
+{question:"Oruç tutmak İslam'ın kaç şartından biridir?",options:["3","4","5","6"],correct:2},
+{question:"Ramazan ayında şeytanlar bağlanır mı?",options:["Evet","Hayır"],correct:0},
+{question:"Oruçluyken kavga etmek doğru mudur?",options:["Hayır","Evet"],correct:0}
+];
+
 // Rastgele 10 soru seç
 const questions = shuffle(questionPool).slice(0, 10);
+
 
 
 function startGame(){
